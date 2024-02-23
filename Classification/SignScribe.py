@@ -11,24 +11,50 @@ from tensorflow.keras.preprocessing import image
 # Load the ASL model
 offset = 20
 img_size = 128
-model = tf.keras.models.load_model('vgg16_model5.h5')
+model = tf.keras.models.load_model('assets/vgg16_model.h5')
 
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=1)
 st.subheader('ASL recognition')
 
-with open('categories.pkl') as file:
+with open('assets/categories.pkl') as file:
     categories = eval(file.read())
 
 gotOutput = False
 string = ''
 string_placeholder = st.empty()
 frame_placeholder = st.empty()
-stop_button_pressed = st.button('Stop')
 
-while cap.isOpened() and not stop_button_pressed:
-    if cv2.waitKey(10) & 0xFF == 27:
-        break
+
+
+def backgroundSubtraction(img):
+    hsvim = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    lower = np.array([0, 48, 80], dtype="uint8")
+    upper = np.array([20, 255, 255], dtype="uint8")
+    skinMask = cv2.inRange(hsvim, lower, upper)
+    # Blur the mask to help remove noise
+    skinMask = cv2.blur(skinMask, (2, 2))
+    # Get threshold image
+    _, thresh = cv2.threshold(skinMask, 100, 255, cv2.THRESH_BINARY)
+
+    # Find the hand contour
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    hand_contour = max(contours, key=lambda x: cv2.contourArea(x))
+    # Create a black background
+    black_bg = np.zeros_like(img)
+
+    # Draw the hand contour on the black image
+    cv2.drawContours(black_bg, [hand_contour], -1, (255, 255, 255), thickness=cv2.FILLED)
+
+    # Apply the mask to the original frame
+    hand_pixels = cv2.bitwise_and(img, black_bg)
+
+    return hand_pixels
+
+
+while cap.isOpened():
+    # if cv2.waitKey(10) & 0xFF == 27:
+    #     break
 
     success, img = cap.read()
     hands, img = detector.findHands(img)

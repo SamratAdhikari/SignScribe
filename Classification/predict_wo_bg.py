@@ -36,16 +36,15 @@ def backgroundSubtraction(img):
 offset = 30
 img_size = 128
 
-model = tf.keras.models.load_model('cnn_model.h5')
+model = tf.keras.models.load_model('assets/vgg16_model.h5')
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=1)
 
-with open('categories.pkl') as file:
+with open('assets/categories.pkl') as file:
     categories = eval(file.read())
 
 while True:
-    key = cv2.waitKey(10) & 0xFF
-    if key == 27:  # Press ESC to exit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
     success, img = cap.read()
@@ -53,9 +52,6 @@ while True:
     img = cv2.flip(img, 1)
 
     if hands:
-
-        # img = backgroundSubtraction(img)
-
         hand = hands[0]
         x, y, w, h = hand['bbox']
         imgCrop = img[y - offset : y + h + offset, -x - w + offset - 75 : -x + offset]
@@ -92,10 +88,16 @@ while True:
         c = categories[tuple(prediction_class)[0]]
         p = str(round(np.max(prediction), 2))
 
-        cv2.putText(img, c, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (92, 13, 195), 3, cv2.LINE_AA)
-        cv2.putText(img, p, (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (92, 13, 195), 3, cv2.LINE_AA)
+        # Create a larger canvas
+        newWindow = np.zeros((imgWhite.shape[0] + 50, imgWhite.shape[1], 3), dtype=np.uint8)
 
-        cv2.imshow('', imgWhite)
+        # Paste the original image onto the new canvas
+        newWindow[:imgWhite.shape[0], :] = imgWhite
+
+        cv2.putText(newWindow, c, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.putText(newWindow, p, (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
+
+        cv2.imshow('Window', newWindow)
 
     cv2.imshow('Image', img)
 
