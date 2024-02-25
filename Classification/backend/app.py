@@ -16,7 +16,7 @@ CORS(app, supports_credentials=True, origins='http://localhost:3000')
 socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for WebSocket
 
 
-with open('assets/categories.pkl') as file:
+with open('../assets/categories.pkl') as file:
     categories = eval(file.read())
 offset = 30
 img_size = 128

@@ -1,9 +1,8 @@
 import os
-import math
-import numpy as np
-import tensorflow as tf
-import pickle
 import cv2
+import math
+import pickle
+import numpy as np
 from HandTrackingModule import HandDetector
 from tensorflow.keras.preprocessing import image
 

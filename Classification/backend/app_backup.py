@@ -1,3 +1,4 @@
+
 import os
 import cv2
 import math
@@ -109,12 +110,12 @@ def gen_frames():
 
                 # cv2.putText(newWindow, c, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
                 # cv2.putText(newWindow, p, (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
-            # ret, buffer = cv2.imencode('.jpg', frame)
-            # frame = buffer.tobytes()
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
             
-            # yield(b'--frame\r\n'
-            #     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'rn')
-            return jsonify({'char': c, 'prob': p})
+            yield(b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'rn')
+            # return jsonify({'char': c, 'prob': p})
 
 @app.route('/')
 def index():
