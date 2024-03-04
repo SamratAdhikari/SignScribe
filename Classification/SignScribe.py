@@ -41,7 +41,7 @@ with frame_placeholder:
     frame_placeholder = st.empty()
     string_placeholder = st.empty()
 with image_placeholder:
-    image_placeholder = st.image('assets/Figure.png', width=370)
+    image_placeholder = st.image('assets/Figure.jpg', width=370)
 
 
 
