@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask
 from flask_socketio import SocketIO, emit
 import base64
@@ -11,7 +14,7 @@ import io
 import time
 import warnings
 from flask_cors import CORS
-import eventlet
+
 import os
 
 
