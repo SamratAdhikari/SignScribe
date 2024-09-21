@@ -18,7 +18,7 @@ warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 CORS(app)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
 
 # Load the ASL model
 string = ""

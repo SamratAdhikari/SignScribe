@@ -1,10 +1,9 @@
 services:
     - type: web
-      name: flask-backend
+      name: backend
       env: python
-      plan: free
-      buildCommand: "pip install -r requirements.txt"
-      start: python backend/app.py
+      buildCommand: pip install -r backend/requirements.txt
+      startCommand: python backend/app.py
       envVars:
           - key: PYTHON_VERSION
-            value: 3.11.3 # Or 3.10
+            value: 3.11.3
