@@ -1,6 +1,5 @@
 import eventlet
-eventlet.monkey_patch()
-
+import math
 from flask import Flask
 from flask_socketio import SocketIO, emit
 import base64
@@ -15,10 +14,6 @@ import time
 import warnings
 from flask_cors import CORS
 
-import os
-
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
