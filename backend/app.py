@@ -18,13 +18,18 @@ warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 
-CORS(app, origins=["https://signscribe-q1ki.onrender.com/", "https://signscribe-backend.onrender.com"], supports_credentials=True)
+CORS(app, origins=["https://signscribe-q1ki.onrender.com", "https://signscribe-backend.onrender.com"], supports_credentials=True)
+
 socketio = SocketIO(
     app, 
-    async_mode='eventlet', 
-    cors_allowed_origins=["https://signscribe-q1ki.onrender.com/"],
-    logger=True,  # This will help with debugging
-    engineio_logger=True  # This will log detailed socket connection info
+    async_mode='eventlet',
+    cors_allowed_origins=["https://signscribe-q1ki.onrender.com"],
+    logger=True,
+    engineio_logger=True,
+    allow_upgrades=True,  # Allow upgrade from HTTP polling to WebSockets
+    transports=['websocket', 'polling'],  # Support WebSocket with fallback to polling
+    ping_timeout=10,  # Adjust ping timeout
+    ping_interval=5    # Adjust ping interval for keep-alive
 )
 
 
