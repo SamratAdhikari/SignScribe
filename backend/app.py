@@ -111,5 +111,4 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == "__main__":
-    # eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 8501)), socketio)
-    socketio.run(app, host='0.0.0.0', port=8501, debug=False)
+    socketio.run(app, host='0.0.0.0')
