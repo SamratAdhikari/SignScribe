@@ -7,12 +7,11 @@ import tensorflow as tf
 from HandTrackingModule import HandDetector
 from tensorflow.keras.preprocessing import image
 from PIL import Image
-import math
 import io
 import time
 import warnings
 from flask_cors import CORS
-
+import eventlet  # Ensure eventlet is imported
 
 warnings.filterwarnings("ignore")
 
@@ -27,13 +26,13 @@ img_size = 128
 prev_char = None
 start_time = None
 model = tf.keras.models.load_model('assets/model.h5', compile=False)
-detector = HandDetector(maxHands=1)  # Move outside to avoid re-initialization
+detector = HandDetector(maxHands=1)
 
 with open('assets/categories.pkl') as file:
     categories = eval(file.read())
 
 def process_image(img_data):
-    img_data = img_data.split(',')[1]  # Remove the data:image/jpeg;base64, part
+    img_data = img_data.split(',')[1]
     img_bytes = base64.b64decode(img_data)
     img = Image.open(io.BytesIO(img_bytes))
     img = np.array(img)
@@ -43,30 +42,24 @@ def process_image(img_data):
 def handle_frame(img):
     global string, prev_char, start_time
     img = process_image(img)
-
     hands, img = detector.findHands(img)
-    img = cv2.flip(img, 1)  # flip the frame horizontally
+    img = cv2.flip(img, 1)
 
-    # Initialize char and prob with default values
     char = ''
     prob = ''
-
     if hands:
         hand = hands[0]
         x, y, w, h = hand['bbox']
-
         imgCrop = img[y-offset : y+h+offset, -x-w+offset-35 : -x+offset]
         imgWhite = np.ones((img_size, img_size, 3), np.uint8) * 255
 
-        aspectRation = h / w
-
-        if aspectRation > 1:
+        aspectRatio = h / w
+        if aspectRatio > 1:
             k = img_size / h
             wCal = math.ceil(k * w)
             imgResize = cv2.resize(imgCrop, (wCal, img_size))
             wGap = math.ceil((img_size - wCal) / 2)
             imgWhite[:, wGap : wCal + wGap] = imgResize
-
         else:
             k = img_size / w
             hCal = math.ceil(k * h)
@@ -74,25 +67,19 @@ def handle_frame(img):
             hGap = math.ceil((img_size - hCal) / 2)
             imgWhite[hGap : hCal + hGap, :] = imgResize
 
-        # imgWhite = cv2.flip(imgWhite, 1)
         my_image_arr = image.img_to_array(imgWhite)
-        my_image_pixel = np.expand_dims(my_image_arr, axis=0)
-        my_image_pixel = my_image_pixel / 255
+        my_image_pixel = np.expand_dims(my_image_arr, axis=0) / 255
         prediction = model.predict(my_image_pixel, verbose=False)
         prediction_class = np.argmax(prediction, axis=1)
-
         char = categories[tuple(prediction_class)[0]]
         prob = str(round(np.max(prediction), 2))
 
         if char == prev_char:
             if start_time is None:
                 start_time = time.time()
-            elif time.time() - start_time >= 1:  # Check if  seconds have passed
-
-                print("here")
+            elif time.time() - start_time >= 1:
                 if char == 'SPACE':
                     char = "  "
-                
                 string += char
                 start_time = None
         else:
@@ -123,8 +110,4 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == "__main__":
-    # Use eventlet as the web server for production
-    socketio.run(app, host='0.0.0.0', port=8501, debug=True, allow_unsafe_werkzeug=True, server_options={"use_reloader": False}, **{'async_mode': 'eventlet'})
-
-
-    # app.run(debug=True)
+    eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 8501)), socketio)
