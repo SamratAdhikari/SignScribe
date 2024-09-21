@@ -17,8 +17,16 @@ from flask_cors import CORS
 warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
-CORS(app, origins=["https://signscribe-q1ki.onrender.com", "https://signscribe-backend.onrender.com"])
-socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["*"])
+
+CORS(app, origins=["https://signscribe-q1ki.onrender.com/", "https://signscribe-backend.onrender.com"], supports_credentials=True)
+socketio = SocketIO(
+    app, 
+    async_mode='eventlet', 
+    cors_allowed_origins=["https://signscribe-q1ki.onrender.com/"],
+    logger=True,  # This will help with debugging
+    engineio_logger=True  # This will log detailed socket connection info
+)
+
 
 # Load the ASL model
 string = ""

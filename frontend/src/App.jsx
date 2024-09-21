@@ -8,7 +8,10 @@ function App() {
     const [text, setText] = useState("");
     const [char, setChar] = useState("");
     const [prob, setProb] = useState("");
-    const socket = io("https://signscribe-backend.onrender.com");
+    const socket = io("https://signscribe-backend.onrender.com", {
+        withCredentials: true,
+        transports: ["websocket"], // Force WebSocket instead of polling
+    });
     // Update with your backend address
 
     useEffect(() => {
