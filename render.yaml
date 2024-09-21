@@ -7,3 +7,5 @@ services:
       envVars:
           - key: PYTHON_VERSION
             value: 3.11.3
+          - key: PORT # Add this to ensure the PORT variable is set
+            value: 8501

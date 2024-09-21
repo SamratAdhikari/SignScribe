@@ -13,6 +13,7 @@ import io
 import time
 import warnings
 from flask_cors import CORS
+import os
 
 warnings.filterwarnings("ignore")
 
@@ -124,4 +125,5 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == "__main__":
-    socketio.run(app, host='0.0.0.0')
+    port = int(os.environ.get('PORT', 8501))  # Get the port from the environment
+    socketio.run(app, host='0.0.0.0', port=port)  # Use the dynamically assigned port
