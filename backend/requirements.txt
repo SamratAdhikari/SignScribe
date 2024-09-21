@@ -67,3 +67,4 @@ urllib3==2.2.3
 Werkzeug==3.0.4
 wrapt==1.16.0
 wsproto==1.2.0
+eventlet

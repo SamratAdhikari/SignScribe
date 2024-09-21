@@ -123,6 +123,8 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == "__main__":
-    socketio.run(app, host='0.0.0.0', port=8501, debug=True, allow_unsafe_werkzeug=True)
+    # Use eventlet as the web server for production
+    socketio.run(app, host='0.0.0.0', port=8501, debug=True, allow_unsafe_werkzeug=True, server_options={"use_reloader": False}, **{'async_mode': 'eventlet'})
+
 
     # app.run(debug=True)

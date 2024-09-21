@@ -4,7 +4,7 @@ services:
       env: python
       plan: free
       buildCommand: "pip install -r requirements.txt"
-      startCommand: "gunicorn -k eventlet -w 1 app:app --bind 0.0.0.0:10000"
+      start: python backend/app.py
       envVars:
           - key: PYTHON_VERSION
             value: 3.11.3 # Or 3.10
