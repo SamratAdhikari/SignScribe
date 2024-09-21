@@ -58,8 +58,8 @@ six==1.16.0
 sounddevice==0.5.0
 tensorboard==2.17.1
 tensorboard-data-server==0.7.2
-tensorflow==2.17.0
-tensorflow-intel==2.17.0
+tensorflow
+tensorflow-intel
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.4.0
 typing_extensions==4.12.2
