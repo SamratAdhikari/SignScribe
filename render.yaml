@@ -4,13 +4,11 @@ services:
       env: python
       buildCommand: pip install -r backend/requirements.txt
       startCommand: gunicorn --worker-class gevent --workers 1 --bind 0.0.0.0:8501 backend.app:app
-
       envVars:
           - key: PYTHON_VERSION
             value: 3.11.3
           - key: PORT
             value: 8501
-
     - type: web
       name: frontend
       env: node
