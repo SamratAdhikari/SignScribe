@@ -10,13 +10,12 @@ function App() {
     const [prob, setProb] = useState("");
     const socket = io("https://signscribe-backend.onrender.com", {
         withCredentials: true,
-        transports: ["websocket", "polling"], // WebSocket first, fallback to polling
+        transports: ["polling"], // WebSocket first, fallback to polling
         reconnection: true, // Allow reconnection attempts
         reconnectionAttempts: 5, // Retry 5 times
         reconnectionDelay: 1000, // 1 second delay before reconnecting
         reconnectionDelayMax: 5000, // Max 5 seconds delay between retries
     });
-    
 
     useEffect(() => {
         // Access webcam and set up video stream
