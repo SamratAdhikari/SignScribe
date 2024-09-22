@@ -21,16 +21,19 @@ warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, origins=["https://signscribe-q1ki.onrender.com", "https://signscribe-backend.onrender.com"], supports_credentials=True)
 
 socketio = SocketIO(
     app, 
-    async_mode='gevent', 
-    cors_allowed_origins="*",
+    async_mode='gevent',  # Change to gevent as eventlet is removed
+    cors_allowed_origins=[
+        "https://signscribe-q1ki.onrender.com", 
+        "https://signscribe-backend.onrender.com",
+    ],
     logger=True,
-    engineio_logger=True,  # Enable logging for socket events
+    engineio_logger=True,
     allow_upgrades=True,
-    transports=['polling'],
+    transports=['polling'],  # WebSocket with fallback to polling
     ping_timeout=10,
     ping_interval=5
 )
