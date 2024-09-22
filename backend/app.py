@@ -1,4 +1,6 @@
-import eventlet
+from gevent import monkey
+monkey.patch_all()
+
 import math
 from flask import Flask
 from flask_socketio import SocketIO, emit
@@ -23,15 +25,22 @@ CORS(app, origins=["https://signscribe-q1ki.onrender.com", "https://signscribe-b
 
 socketio = SocketIO(
     app, 
-    async_mode='eventlet',
-    cors_allowed_origins=["https://signscribe-q1ki.onrender.com"],
+    async_mode='gevent',  # Change to gevent as eventlet is removed
+    cors_allowed_origins=[
+        "https://signscribe-q1ki.onrender.com", 
+        "https://signscribe-backend.onrender.com",
+        "wss://signscribe-q1ki.onrender.com", 
+        "wss://signscribe-backend.onrender.com"
+    ],
     logger=True,
     engineio_logger=True,
-    allow_upgrades=True,  # Allow upgrade from HTTP polling to WebSockets
-    transports=['websocket', 'polling'],  # Support WebSocket with fallback to polling
-    ping_timeout=10,  # Adjust ping timeout
-    ping_interval=5    # Adjust ping interval for keep-alive
+    allow_upgrades=True,
+    transports=['websocket', 'polling'],  # WebSocket with fallback to polling
+    ping_timeout=10,
+    ping_interval=5
 )
+
+
 
 
 # Load the ASL model

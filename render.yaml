@@ -3,7 +3,8 @@ services:
       name: backend
       env: python
       buildCommand: pip install -r backend/requirements.txt
-      startCommand: python backend/app.py
+      startCommand: gunicorn --worker-class gevent --workers 1 --bind 0.0.0.0:8501 backend.app:app
+
       envVars:
           - key: PYTHON_VERSION
             value: 3.11.3
