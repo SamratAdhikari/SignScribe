@@ -40,6 +40,10 @@ RUN apt-get update && apt-get install -y \
 COPY backend/requirements.txt ./backend/
 RUN pip install --upgrade pip && pip install --no-cache-dir -r backend/requirements.txt
 
+# Install Python dependencies directly
+RUN pip install --upgrade pip && \
+    pip install fastapi uvicorn[standard] websocket
+
 # Expose the port FastAPI will run on
 EXPOSE 7860
 
