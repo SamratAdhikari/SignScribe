@@ -1,0 +1,7 @@
+fastapi
+tensorflow
+uvicorn
+websocket
+opencv-python-headless
+mediapipe
+numpy
