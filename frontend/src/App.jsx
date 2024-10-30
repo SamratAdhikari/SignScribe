@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 // Replace with your FastAPI backend WebSocket endpoint
-const WEBSOCKET_URL = `wss://${window.location.hostname}:7860/ws`; // Use wss:// for secure WebSocket
+const WEBSOCKET_URL = `wss://https://mryeti-signscribe.hf.space:7860/ws`; // Use wss:// for secure WebSocket
 
 function App() {
     const videoRef = useRef(null);
